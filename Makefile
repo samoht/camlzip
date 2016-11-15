@@ -3,10 +3,6 @@
 # The name of the Zlib library.  Usually -lz
 ZLIB_LIB=-lz
 
-# The directory containing the Zlib library (libz.a or libz.so)
-ZLIB_LIBDIR=/usr/lib
-# ZLIB_LIBDIR=/usr/local/lib
-
 # The directory containing the Zlib header file (zlib.h)
 ZLIB_INCLUDE=/usr/include
 # ZLIB_INCLUDE=/usr/local/include
@@ -36,19 +32,16 @@ all: libcamlzip.a zip.cma
 allopt: libcamlzip.a zip.cmxa $(CMXS)
 
 zip.cma: $(OBJS)
-	$(OCAMLMKLIB) -o zip -oc camlzip $(OBJS) \
-            -L$(ZLIB_LIBDIR) $(ZLIB_LIB)
+	$(OCAMLMKLIB) -o zip -oc camlzip $(OBJS) $(ZLIB_LIB)
 
 zip.cmxa: $(OBJS:.cmo=.cmx)
-	$(OCAMLMKLIB) -o zip -oc camlzip $(OBJS:.cmo=.cmx) \
-            -L$(ZLIB_LIBDIR) $(ZLIB_LIB)
+	$(OCAMLMKLIB) -o zip -oc camlzip $(OBJS:.cmo=.cmx) $(ZLIB_LIB)
 
 zip.cmxs: zip.cmxa
 	$(OCAMLOPT) -shared -linkall -I ./ -o $@ $^
 
 libcamlzip.a: $(C_OBJS)
-	$(OCAMLMKLIB) -oc camlzip $(C_OBJS) \
-            -L$(ZLIB_LIBDIR) $(ZLIB_LIB)
+	$(OCAMLMKLIB) -oc camlzip $(C_OBJS) $(ZLIB_LIB)
 
 .SUFFIXES: .mli .ml .cmo .cmi .cmx
 
